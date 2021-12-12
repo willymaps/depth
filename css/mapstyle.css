@@ -1,7 +1,27 @@
-<style>
-
 #mapWrap h2 {
     color:#111;
+}
+
+#mapWrap, .credit {
+    width:100%;
+    display: block;
+    font-family: sans-serif;
+    color:#555;
+    max-width:1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.credit {
+    line-height: 6px;
+    font-size: 12px;
+    margin-top:20px;
+    color:#888;
+}
+
+.credit a {
+    text-decoration:none;
+    color: coral;
 }
 
 #removeBuffer {
@@ -31,17 +51,6 @@
     left: 10px;
     width: 100%;
     z-index: 1;
-}
-
-.mapboxgl-popup {
-    max-width: 400px;
-    font-size: 10px;
-    font-family: sans-serif;
-}
-
-.mapboxgl-popup-content {
-    pointer-events: none !important;
-    padding:12px;
 }
 
 .column {
@@ -85,5 +94,3 @@
     }
 
 }
-
-</style>
