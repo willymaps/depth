@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8' />
+<title>Bathymetry</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="./css/mapstyle.css" />
+<link href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
+<script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+<style type="text/css">
+
+body {
+    font-family: sans-serif;
+}
+
+#mapWrap, .credit {
+    width:100%;
+    display: block;
+    font-family: sans-serif;
+    color:#555;
+    max-width:1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.credit {
+    line-height: 6px;
+    font-size: 12px;
+    margin-top:20px;
+    color:#888;
+}
+
+.credit a {
+    text-decoration:none;
+    color: coral;
+}
+
+#closeBtn {
+    display: none;
+    position: absolute;
+    background: red;
+    color:#fff;
+    font-weight: bold;
+    border:none;
+    padding:12px 20px;
+    top:10px;
+    right:10px;
+    z-index:10;
+}
+
+#closeBtn:hover {
+    cursor: pointer;
+}
+
+</style>
+</head>
+
+<body>
+<div id="mapWrap">
+    <div class="column left">
+        <h2>Great Lakes Extruded Bathymetry</h2>
+        <p>Visualizing depth using a Mapbox <a href="https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/#fill-extrusion" targert="_blank">fill-extrusion layer.</a></p>
+        <div id="removeBuffer">Dive In!</div>
+    </div>
+    <div class="column right">
+        <div id="map"></div>
+    </div>
+</div>
+<div class="credit">
+    <p>Data: <a href="https://www.ngdc.noaa.gov/mgg/greatlakes/" target="_blank">NOAA</a></p>
+    <p>Code: <a href="https://github.com/willymaps/depth" target="_blank">Github</a></p>
+</div>
+
+<script src="./js/linehover.js"></script>
+<script>
+
+let dove = true;
+document.getElementById("removeBuffer").addEventListener("click", displayBuffer);
+
+var mapBounds = [[-105.732421875,
+          36.24427318493909],[-66.97265625,
+          54.92714186454645]];
+
+var popup = new mapboxgl.Popup({
+        closeButton: true,
+        closeOnClick: false
+    });
+
+
+// please use your own token!
+// mapboxgl.accessToken = 'pk.eyJ1Ijoid2lsbGlhbWJlbmRhdmlzIiwiYSI6IlVrb3BGVzQifQ.jeHxDCnpXXvAXKfAFEYG-A';
+mapboxgl.accessToken = 'pk.eyJ1Ijoid2lsbGlhbS1kYXZpcyIsImEiOiJja2prYmpvMncwM21pMnJtbjg0NnBjbWduIn0.9n0cpRnRO06AI7oydrZjbw';
+
+
+var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/william-davis/ckx15asbe1ddr14mlha7283lr',
+    center: [-83.397216796875,45.40616374516014],
+    zoom: 5.2,
+    bearing:17,
+    minZoom: 5,
+    maxZoom: 8,
+    pitch: 30,
+    maxBounds: mapBounds,
+    hash: false
+});
+
+
+map.on('load', function() {
+    map.on('move', () => {
+        if (map.getZoom() <= 5.2 && map.getBearing() === 17 && map.getPitch() === 30) {
+            map.setPaintProperty('lake-names', 'text-opacity', 1);
+        } else {
+            map.setPaintProperty('lake-names', 'text-opacity', 0);
+        } 
+    });
+});
+
+// btn function
+function displayBuffer() {
+    if (dove == true) {
+        document.getElementById('removeBuffer').innerHTML = "Back out";
+        dove = false;
+        map.flyTo({
+            center: [-86.9677734375, 47.487513008956554],
+            zoom:8,
+            pitch:0,
+            duration: 3000
+        });
+    } else {
+        dove = true;
+        document.getElementById('removeBuffer').innerHTML = "Dive In!"
+        map.flyTo({
+            center: [-83.397216796875, 45.40616374516014],
+            pitch:30,
+            zoom:5.2,
+            bearing:17
+        });
+    }
+};
+
+</script>
+</body>
+</html>
